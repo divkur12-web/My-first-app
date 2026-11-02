@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GK Quiz Master</title>
+<link rel="manifest" href="manifest.json">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:system-ui}
+body{background:#0f0f12;color:#fff;min-height:100vh}
+header{padding:20px;text-align:center;background:linear-gradient(135deg,#6c5ce7,#a29bfe)}
+.container{padding:20px;max-width:480px;margin:0 auto}
+.card{background:#1e1e24;border-radius:16px;padding:20px;margin-bottom:16px}
+.option{background:#2a2a33;padding:12px;border-radius:10px;margin:8px 0;cursor:pointer}
+.option.correct{background:#00b894} .option.wrong{background:#d63031}
+.ad-box{background:#2d2d35;border:2px dashed #636e72;border-radius:12px;padding:18px;text-align:center;margin:16px 0}
+button{width:100%;padding:14px;border:none;border-radius:12px;background:#6c5ce7;color:#fff;font-weight:600}
+</style>
+</head>
+<body>
+<header><h1>🧠 GK Quiz Master</h1><p>Play - Learn - Earn</p></header>
+<div class="container">
+<div class="ad-box">AD SPACE - Yaha Ad Aayega</div>
+<div class="card"><h2 id="q-counter"></h2><h3 id="question" style="margin:14px 0"></h3><div id="options"></div></div>
+<div class="card" style="text-align:center"><h3>Score: <span id="score">0</span></h3><button id="next" style="display:none">Next</button><button id="restart" style="display:none;background:#00b894">Play Again</button></div>
+</div>
+<script>
+const quiz=[{q:"India ka capital?",o:["Mumbai","Delhi","Kolkata","Chennai"],a:1},{q:"Taj Mahal kaha hai?",o:["Delhi","Agra","Jaipur","Lucknow"],a:1},{q:"Android kis company ka?",o:["Apple","Google","Microsoft","Meta"],a:1},{q:"1GB = ?",o:["100MB","512MB","1000MB","1024MB"],a:3},{q:"Sabse bada ocean?",o:["Atlantic","Indian","Pacific","Arctic"],a:2}];
+let cur=0,score=0;const qEl=document.getElementById('question'),optEl=document.getElementById('options'),scoreEl=document.getElementById('score'),counter=document.getElementById('q-counter'),next=document.getElementById('next'),restart=document.getElementById('restart');
+function loadQ(){let qq=quiz[cur];counter.textContent=`Question ${cur+1}/${quiz.length}`;qEl.textContent=qq.q;optEl.innerHTML='';qq.o.forEach((txt,i)=>{let d=document.createElement('div');d.className='option';d.textContent=txt;d.onclick=()=>check(i,d);optEl.appendChild(d);});next.style.display='none';}
+function check(i,el){let qq=quiz[cur];let opts=document.querySelectorAll('.option');opts.forEach(o=>o.style.pointerEvents='none');if(i===qq.a){el.classList.add('correct');score++;scoreEl.textContent=score;}else{el.classList.add('wrong');opts[qq.a].classList.add('correct');}next.style.display='block';if(cur===quiz.length-1)next.textContent='See Result';}
+next.onclick=()=>{cur++;if(cur<quiz.length)loadQ();else{ qEl.textContent=`Game Over! Score ${score}/${quiz.length}`; optEl.innerHTML=''; counter.textContent='Result'; next.style.display='none'; restart.style.display='block'; }}
+restart.onclick=()=>{cur=0;score=0;scoreEl.textContent=0;next.textContent='Next';restart.style.display='none';loadQ();}
+loadQ();if('serviceWorker' in navigator){navigator.serviceWorker.register('sw.js');}
+</script>
+</body>
+</html>
